@@ -1,0 +1,63 @@
+services:
+  db:
+    image: mariadb:11.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - wp_lab_db:/var/lib/mysql
+
+  wordpress:
+    image: wordpress:latest
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "8088:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DEBUG: "1"
+    volumes:
+      - wp_lab_wordpress:/var/www/html
+      - ../workspace/plugins:/var/www/html/wp-content/plugins
+      - ../workspace/themes:/var/www/html/wp-content/themes
+      - ../workspace/uploads:/var/www/html/wp-content/uploads
+
+  wpcli:
+    image: wordpress:cli
+    depends_on:
+      - db
+      - wordpress
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    volumes:
+      - wp_lab_wordpress:/var/www/html
+      - ../workspace/plugins:/var/www/html/wp-content/plugins
+      - ../workspace/themes:/var/www/html/wp-content/themes
+      - ../workspace/uploads:/var/www/html/wp-content/uploads
+    working_dir: /var/www/html
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "8089:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+
+volumes:
+  wp_lab_db:
+  wp_lab_wordpress:
