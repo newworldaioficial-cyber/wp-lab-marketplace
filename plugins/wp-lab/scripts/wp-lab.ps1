@@ -12,6 +12,7 @@ $SiteUrl = "http://localhost:8088"
 $AdminUser = "admin"
 $AdminPassword = "admin"
 $AdminEmail = "admin@example.local"
+$DefaultTheme = "wp-lab-minimal"
 
 function Ensure-Workspace {
   New-Item -ItemType Directory -Force -Path `
@@ -30,7 +31,18 @@ function Invoke-Compose {
   param([string[]] $ComposeArgs)
   Require-Docker
   Ensure-Workspace
-  & docker compose -f $ComposeFile -p wp-lab @ComposeArgs
+  $PreviousErrorActionPreference = $ErrorActionPreference
+  $ErrorActionPreference = "Continue"
+
+  try {
+    & docker compose -f $ComposeFile -p wp-lab @ComposeArgs
+    $ExitCode = $LASTEXITCODE
+  }
+  finally {
+    $ErrorActionPreference = $PreviousErrorActionPreference
+  }
+
+  $global:LASTEXITCODE = $ExitCode
 }
 
 function Invoke-WpCli {
@@ -60,6 +72,7 @@ function Install-WordPressIfNeeded {
   Invoke-WpCli @("core", "is-installed") *> $null
   if ($LASTEXITCODE -eq 0) {
     Write-Host "WordPress is already installed."
+    Ensure-DefaultThemeIfNeeded
     Ensure-AdminUser
     return
   }
@@ -76,9 +89,31 @@ function Install-WordPressIfNeeded {
   )
 
   Invoke-WpCli @("option", "update", "timezone_string", "Europe/Madrid") | Out-Null
+  Invoke-WpCli @("theme", "activate", $DefaultTheme) | Out-Null
   Invoke-WpCli @("rewrite", "structure", "/%postname%/", "--hard") | Out-Null
   Ensure-AdminUser
   Write-Host "WordPress is ready."
+}
+
+function Ensure-DefaultThemeIfNeeded {
+  Invoke-WpCli @("theme", "is-installed", $DefaultTheme) *> $null
+  if ($LASTEXITCODE -ne 0) {
+    return
+  }
+
+  $currentTheme = Invoke-WpCli @("option", "get", "stylesheet") 2>$null |
+    Where-Object { $_ -and $_ -notmatch "^\s*Container " } |
+    Select-Object -First 1
+
+  if (-not $currentTheme) {
+    Invoke-WpCli @("theme", "activate", $DefaultTheme) | Out-Null
+    return
+  }
+
+  Invoke-WpCli @("theme", "is-installed", $currentTheme) *> $null
+  if ($LASTEXITCODE -ne 0) {
+    Invoke-WpCli @("theme", "activate", $DefaultTheme) | Out-Null
+  }
 }
 
 function Ensure-AdminUser {

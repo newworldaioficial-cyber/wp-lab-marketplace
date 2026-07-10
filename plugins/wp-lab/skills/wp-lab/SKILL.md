@@ -18,6 +18,9 @@ The lab lives inside this plugin at:
 
 The WordPress site runs at `http://localhost:8088` and phpMyAdmin runs at `http://localhost:8089`.
 
+WP Lab includes a minimal default theme at `workspace/themes/wp-lab-minimal/`.
+The start command activates it on fresh installs and repairs installs that point to a missing theme, so the front end is usable immediately.
+
 Default credentials:
 
 - WordPress database: `wordpress`

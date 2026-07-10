@@ -1,6 +1,7 @@
 # WP Lab
 
 WP Lab is a Codex plugin that starts a local WordPress sandbox for testing plugins and themes.
+It includes a minimal default theme so the front end works immediately on fresh installs.
 
 ## Requirements
 
@@ -15,7 +16,8 @@ From the plugin folder:
 .\scripts\wp-lab.ps1 start
 ```
 
-The first start installs WordPress automatically.
+The first start installs WordPress automatically and activates the included `wp-lab-minimal` theme.
+If an existing install points to a missing theme, WP Lab repairs it by activating the minimal theme.
 
 ```text
 WordPress:  http://localhost:8088
@@ -63,4 +65,3 @@ workspace/themes/my-theme/style.css
 .\scripts\wp-lab.ps1 logs
 .\scripts\wp-lab.ps1 reset
 ```
-

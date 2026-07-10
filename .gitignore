@@ -8,5 +8,6 @@ plugins/wp-lab/workspace/uploads/*
 
 !plugins/wp-lab/workspace/plugins/.gitkeep
 !plugins/wp-lab/workspace/themes/.gitkeep
+!plugins/wp-lab/workspace/themes/wp-lab-minimal/
+!plugins/wp-lab/workspace/themes/wp-lab-minimal/**
 !plugins/wp-lab/workspace/uploads/.gitkeep
-
