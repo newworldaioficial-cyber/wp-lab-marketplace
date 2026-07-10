@@ -1,0 +1,12 @@
+.DS_Store
+Thumbs.db
+
+# WordPress lab runtime content
+plugins/wp-lab/workspace/plugins/*
+plugins/wp-lab/workspace/themes/*
+plugins/wp-lab/workspace/uploads/*
+
+!plugins/wp-lab/workspace/plugins/.gitkeep
+!plugins/wp-lab/workspace/themes/.gitkeep
+!plugins/wp-lab/workspace/uploads/.gitkeep
+
