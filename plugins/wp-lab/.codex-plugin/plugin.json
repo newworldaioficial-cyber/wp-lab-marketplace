@@ -1,0 +1,25 @@
+{
+  "name": "wp-lab",
+  "version": "0.1.1",
+  "description": "Local WordPress lab for testing plugins and themes.",
+  "author": {
+    "name": "Sebas"
+  },
+  "license": "MIT",
+  "keywords": ["wordpress", "plugins", "themes", "local-dev"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "WP Lab",
+    "shortDescription": "Run a local WordPress sandbox for plugins and themes.",
+    "longDescription": "WP Lab gives Codex a local WordPress sandbox workflow with Docker Compose, mounted plugin and theme folders, automatic first-run WordPress setup, and scripts for starting, stopping, resetting, and opening the test site.",
+    "developerName": "Sebas",
+    "category": "Productivity",
+    "capabilities": ["Local development", "WordPress", "Testing"],
+    "brandColor": "#21759B",
+    "defaultPrompt": [
+      "Start my WordPress lab.",
+      "Add this WordPress plugin to WP Lab.",
+      "Help me test a WordPress theme."
+    ]
+  }
+}
